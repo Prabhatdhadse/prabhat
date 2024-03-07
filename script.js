@@ -1,19 +1,26 @@
 var screen = document.querySelectorAll(".screen")
 var btn = document.querySelector(".screen button")
-var allbox = document.querySelectorAll(".box")
+var allelem = document.querySelectorAll(".box")
 var selected = ""
 var playGround = document.querySelector(".playground")
+var scoreDiv = document.querySelector(".score span")
+var timeDiv = document.querySelector(".time span")
+var h4 = document.querySelector(".screen>h4 ")
+var score = 0;
+var min = 0;
+var sec = 0;
 
 
 btn.addEventListener("click",function(){
        screen[1].style.transform = "translateY(-100%)"
 })
 
-allbox.forEach(function(box){
-    box.addEventListener("click",function(){
+allelem.forEach(function(elem){
+    elem.addEventListener("click",function(){
         screen[2].style.transform = "translateY(-200%)"
-        selected = box.childNodes[3].getAttribute("src",selected)
+        selected = elem.childNodes[3].getAttribute("src",selected)
         createImage()
+        timing()
     })
 })
 
@@ -24,8 +31,10 @@ function createImage(){
     newImg.style.left = obj.x+"%"
     newImg.style.top = obj.y+"%"
     newImg.style.rotate = obj.rot+"deg"
+    
     playGround.appendChild(newImg)
-    catchImage()
+    newImg.addEventListener("click",catchImage)
+    // catchImage()
 }
 function getRandom(){
     var x = Math.random()*100
@@ -34,9 +43,29 @@ function getRandom(){
     return {x,y,rot}
 }
 function catchImage(){
-    var playImage = document.querySelector(".playground.img")
-    playImage.addEventListener("click",function(){
-        var obj = getRandom()
-        console.log(obj.x)
-    })
+    increaseScore()
+    this.style.opacity = 0
+   
+   
+    setTimeout(function(){
+        this.style.opacity = 1
+    },2000)
+    addImages()
+} 
+function increaseScore(){
+    score++
+    scoreDiv.innerHTML = score
+    if(score>5){
+        h4.style.display = "block"
+    }
+}  
+function addImages(){
+    setTimeout(createImage,1000)
+    setTimeout(createImage,1500)
+}
+function timing(){
+    setInterval(function(){
+        sec++
+        timeDiv.innerHTML = `${sec} : ${sec}`
+    },100)
 }
